@@ -1,25 +1,38 @@
 package model;
 
 public class ExchangeTransaction {
-    private final ExchangeQuote quote;
-    private final double amountFrom;
+  private final ExchangeQuote quote;
+  private final double amountFrom;
 
-    public ExchangeTransaction(ExchangeQuote quote, double amountFrom) {
-        this.quote = quote;
-        this.amountFrom = amountFrom;
-    }
+  public ExchangeTransaction(ExchangeQuote quote, double amountFrom) {
+    this.quote = quote;
+    this.amountFrom = amountFrom;
+  }
 
-    public ExchangeQuote getQuote() { return quote; }
-    public double getAmountFrom() { return amountFrom; }
+  public ExchangeQuote getQuote() {
+    return quote;
+  }
 
-    public double computeAmountTo() {
-        return amountFrom * quote.rateWithCommission();
-    }
+  public double getAmountFrom() {
+    return amountFrom;
+  }
 
-    @Override
-    public String toString() {
-        return "транзакция: " + amountFrom + " " + quote.getCurrency1() +
-                " -> " + String.format("%.4f", computeAmountTo()) + " " + quote.getCurrency2() +
-                " (" + quote.getBank().toString() + ")";
-    }
+  public double computeAmountTo() {
+    return amountFrom * quote.rateWithCommission();
+  }
+
+  @Override
+  public String toString() {
+    return "транзакция: "
+        + amountFrom
+        + " "
+        + quote.getCurrency1()
+        + " -> "
+        + String.format(java.util.Locale.US, "%.4f", computeAmountTo())
+        + " "
+        + quote.getCurrency2()
+        + " ("
+        + quote.getBank().toString()
+        + ")";
+  }
 }
