@@ -24,9 +24,8 @@ public class ExchangeQuote extends ExchangeRate {
         return getRate() * (1.0 + commission / 100.0);
     }
 
-    @Override
     public String toString() {
-        return String.format("%s | банк=%s | канал=%s | комиссия=%.3f%% | курс c комиссией=%.6f",
+        return String.format("%s | банк=%s | комиссия=%.3f%% | курс c комиссией=%.6f",
                 super.toString(), bank, commission, rateWithCommission());
     }
 }
