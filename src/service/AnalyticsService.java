@@ -1,6 +1,7 @@
 package service;
 
 import model.Bank;
+import model.ExchangeQuote;
 import model.ExchangeRate;
 
 import java.util.Comparator;
@@ -14,5 +15,9 @@ public class AnalyticsService {
 
     public Optional<ExchangeRate> findMinRate(List<ExchangeRate> rates) {
         return rates.stream().min(Comparator.comparing(ExchangeRate::getRate));
+    }
+
+    public Optional<ExchangeQuote> findBestQuote(List<ExchangeQuote> quotes) {
+        return quotes.stream().min(Comparator.comparing(ExchangeQuote::rateWithCommission));
     }
 }
