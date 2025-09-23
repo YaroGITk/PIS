@@ -1,6 +1,7 @@
 package io;
 
 import model.Bank;
+import model.ExchangeQuote;
 import model.ExchangeRate;
 
 import java.io.IOException;
@@ -57,5 +58,29 @@ public class ExchangeParser {
         }
 
         return banks;
+    }
+
+    public List<ExchangeQuote> parseQuotesFromFile(String filename, List<Bank> knownBanks)
+            throws IOException, ParseException {
+        List<String> lines = Files.readAllLines(Paths.get(filename));
+        List<ExchangeQuote> response = new ArrayList<>();
+        for (String line : lines) {
+            String[] parts = line.split(" ");
+            String currency1 = parts[0];
+            String currency2 = parts[1];
+            double rate = Double.parseDouble(parts[2]);
+            Date date = dateFormat.parse(parts[3]);
+            String bankName = parts[4];
+            double commission = Double.parseDouble(parts[5]);
+
+            Bank bank = knownBanks.stream()
+                    .filter(b -> b.toString().contains(bankName) || b.getClientCount() >= 0)
+                    .filter(b -> b.toString().contains(bankName))
+                    .findFirst()
+                    .orElse(new Bank(bankName, 0));
+
+            response.add(new ExchangeQuote(currency1, currency2, rate, date, bank, commission));
+        }
+        return response;
     }
 }
