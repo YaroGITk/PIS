@@ -1,12 +1,14 @@
+package model;
+
 import java.util.Date;
 
-public class InfoExchange {
+public class ExchangeRate {
     String currency1;
     String currency2;
     double exchangeRate;
     Date date;
 
-    public InfoExchange(String currency1, String currency2, double exchangeRate, Date date) {
+    public ExchangeRate(String currency1, String currency2, double exchangeRate, Date date) {
         this.currency1 = currency1;
         this.currency2 = currency2;
         this.exchangeRate = exchangeRate;
@@ -17,11 +19,13 @@ public class InfoExchange {
         return date + ": курс " + currency1 + " для " + currency2 + " = " + exchangeRate;
     }
 
-    public String getCurrency1() { return currency1; }
+    public String getCurrency1() {
+        return currency1;
+    }
 
     public String getCurrency2() { return currency2; }
 
-    public double getExchangeRate() { return exchangeRate; }
+    public double getRate() { return exchangeRate; }
 
     public Date getDate() { return date; }
 
