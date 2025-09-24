@@ -68,13 +68,16 @@ public class CurrencyExchange {
             String currency2 = parts[1];
             double exchangeRate = Double.parseDouble(parts[2]);
             Date date = dateFormat.parse(parts[3]);
+            boolean isBlocked = Boolean.parseBoolean(parts[4]);
+
 
             infoExchangeList.add(
                     new InfoExchange(
                             currency1,
                             currency2,
                             exchangeRate,
-                            date
+                            date,
+                            isBlocked
                     )
             );
         }
