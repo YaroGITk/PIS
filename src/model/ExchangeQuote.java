@@ -7,13 +7,8 @@ public class ExchangeQuote extends ExchangeRate {
   private final double commission;
 
   public ExchangeQuote(
-      String currency1,
-      String currency2,
-      double exchangeRate,
-      Date date,
-      Bank bank,
-      double commission) {
-    super(currency1, currency2, exchangeRate, date);
+      String currency1, String currency2, double rate, Date date, Bank bank, double commission) {
+    super(currency1, currency2, rate, date);
     this.bank = bank;
     this.commission = commission;
   }

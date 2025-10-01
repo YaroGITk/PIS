@@ -8,16 +8,11 @@ public class ExchangeRate {
   private final double exchangeRate;
   private final Date date;
 
-  public ExchangeRate(String currency1, String currency2, double exchangeRate, Date date) {
+  public ExchangeRate(String currency1, String currency2, double rate, Date date) {
     this.currency1 = currency1;
     this.currency2 = currency2;
-    this.exchangeRate = exchangeRate;
+    this.exchangeRate = rate;
     this.date = date;
-  }
-
-  @Override
-  public String toString() {
-    return date + ": курс " + currency1 + " для " + currency2 + " = " + exchangeRate;
   }
 
   public String getCurrency1() {
@@ -34,5 +29,10 @@ public class ExchangeRate {
 
   public Date getDate() {
     return date;
+  }
+
+  @Override
+  public String toString() {
+    return date + ": курс " + currency1 + " для " + currency2 + " = " + exchangeRate;
   }
 }

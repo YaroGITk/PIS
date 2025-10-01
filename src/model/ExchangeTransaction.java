@@ -24,15 +24,10 @@ public class ExchangeTransaction {
   @Override
   public String toString() {
     return "транзакция: "
-        + amountFrom
-        + " "
-        + quote.getCurrency1()
-        + " -> "
-        + String.format(java.util.Locale.US, "%.4f", computeAmountTo())
-        + " "
-        + quote.getCurrency2()
-        + " ("
-        + quote.getBank().toString()
-        + ")";
+        + amountFrom + " "
+        + quote.getCurrency1() + " -> "
+        + String.format(java.util.Locale.US, "%.4f", computeAmountTo()) + " "
+        + quote.getCurrency2() + " ("
+        + quote.getBank() + ")";
   }
 }

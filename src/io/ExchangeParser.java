@@ -1,76 +1,71 @@
 package io;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import model.Bank;
 import model.ExchangeQuote;
 import model.ExchangeRate;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class ExchangeParser {
-  private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+  private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy.MM.dd", Locale.US);
 
-  public List<ExchangeRate> parseExchangeRatesFromFile(String filename)
-      throws IOException, ParseException {
-    List<String> lines = Files.readAllLines(Paths.get(filename));
-    List<ExchangeRate> infoExchangeRatesList = new ArrayList<>();
-
-    for (String line : lines) {
-      String[] parts = line.split(" ");
-      String currency1 = parts[0];
-      String currency2 = parts[1];
-      double exchangeRate = Double.parseDouble(parts[2]);
-      Date date = dateFormat.parse(parts[3]);
-
-      infoExchangeRatesList.add(new ExchangeRate(currency1, currency2, exchangeRate, date));
-    }
-
-    return infoExchangeRatesList;
+  public List<ExchangeRate> parseExchangeRatesFromFile(String file) throws IOException {
+    List<ExchangeRate> out = new ArrayList<>();
+    for (String line : Files.readAllLines(Path.of(file))) addRate(out, line);
+    return out;
   }
 
-  public List<Bank> parseBanksFromFile(String filename) throws IOException, ParseException {
-    List<String> lines = Files.readAllLines(Paths.get(filename));
-    List<Bank> banks = new ArrayList<>();
-
-    for (String line : lines) {
-      String[] parts = line.split(" ");
-      String name = parts[0];
-      long countMembers = Integer.parseInt(parts[1]);
-
-      banks.add(new Bank(name, countMembers));
-    }
-
-    return banks;
+  public List<Bank> parseBanksFromFile(String file) throws IOException {
+    List<Bank> out = new ArrayList<>();
+    for (String line : Files.readAllLines(Path.of(file))) addBank(out, line);
+    return out;
   }
 
-  public List<ExchangeQuote> parseQuotesFromFile(String filename, List<Bank> knownBanks)
-      throws IOException, ParseException {
-    List<String> lines = Files.readAllLines(Paths.get(filename));
-    List<ExchangeQuote> response = new ArrayList<>();
-    for (String line : lines) {
-      String[] parts = line.split(" ");
-      String currency1 = parts[0];
-      String currency2 = parts[1];
-      double rate = Double.parseDouble(parts[2]);
-      Date date = dateFormat.parse(parts[3]);
-      String bankName = parts[4];
-      double commission = Double.parseDouble(parts[5]);
+  public List<ExchangeQuote> parseQuotesFromFile(String file, List<Bank> banks) throws IOException {
+    List<ExchangeQuote> out = new ArrayList<>();
+    for (String line : Files.readAllLines(Path.of(file))) addQuote(out, line, banks);
+    return out;
+  }
 
+  private void addRate(List<ExchangeRate> out, String line) {
+    try {
+      String[] parts = line.split(" ");
+      out.add(
+          new ExchangeRate(parts[0], parts[1], Double.parseDouble(parts[2]), DF.parse(parts[3])));
+    } catch (Exception ignored) {
+    }
+  }
+
+  private void addBank(List<Bank> out, String line) {
+    try {
+      String[] parts = line.split(" ");
+      out.add(new Bank(parts[0], Long.parseLong(parts[1])));
+    } catch (Exception ignored) {
+    }
+  }
+
+  private void addQuote(List<ExchangeQuote> out, String line, List<Bank> banks) {
+    try {
+      String[] parts = line.split(" ");
       Bank bank =
-          knownBanks.stream()
-              .filter(b -> b.toString().contains(bankName) || b.getClientCount() >= 0)
-              .filter(b -> b.toString().contains(bankName))
+          banks.stream()
+              .filter(x -> x.getName().equalsIgnoreCase(parts[4]))
               .findFirst()
-              .orElse(new Bank(bankName, 0));
-
-      response.add(new ExchangeQuote(currency1, currency2, rate, date, bank, commission));
+              .orElse(new Bank(parts[4], 0));
+      out.add(
+          new ExchangeQuote(
+              parts[0],
+              parts[1],
+              Double.parseDouble(parts[2]),
+              DF.parse(parts[3]),
+              bank,
+              Double.parseDouble(parts[5])));
+    } catch (Exception ignored) {
     }
-    return response;
   }
 }

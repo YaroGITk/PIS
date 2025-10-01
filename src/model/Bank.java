@@ -4,14 +4,9 @@ public class Bank {
   private final String name;
   private final long clientCount;
 
-  public Bank(String name, long countMembers) {
+  public Bank(String name, long clientCount) {
     this.name = name;
-    this.clientCount = countMembers;
-  }
-
-  @Override
-  public String toString() {
-    return "Название банка: " + this.name + ", кол-во клиентов: " + this.clientCount;
+    this.clientCount = clientCount;
   }
 
   public String getName() {
@@ -19,6 +14,11 @@ public class Bank {
   }
 
   public long getClientCount() {
-    return this.clientCount;
+    return clientCount;
+  }
+
+  @Override
+  public String toString() {
+    return "Название банка: " + name + ", кол-во клиентов: " + clientCount;
   }
 }
